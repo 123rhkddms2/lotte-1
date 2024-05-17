@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <title>롯데ON::3조</title>
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{./images/favicon.ico}" />
+    <link rel="stylesheet" th:href="@{https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css}"/>
+    <link rel="stylesheet" th:href="@{/css/common.css}"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // 로그인 상태 확인
+        const isAuthenticated = [[${#authorization.expression('isAuthenticated()')}]];
+    </script>
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"></script>
+    <script th:src="@{https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js}"></script>
+    <script th:src="@{https://kit.fontawesome.com/20962f3e4b.js}" crossorigin="anonymous"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js}"></script>
+    <script th:src="@{./js/index.js}"></script>
+    <!--<script th:src="@{./js/sseSeller.js}"></script>-->
+
+    <style>
+        #bannerTop {
+            display: none;
+            width: 100%;
+            height: 80px;
+            border-bottom: 1px solid #e9e9e9;
+            box-sizing: border-box;
+        }
+
+        #bannerTop.on {
+            display: block;
+        }
+
+        #bannerTop > article {
+            position: relative;
+            width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        #bannerTop > article > .btnClose {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            width: 40px;
+            height: 40px;
+            background-image: url('/images/ico_sprite.png');
+            background-position: -122px -142px;
+            background-color: transparent;
+            font-size: 0;
+            border: none;
+            cursor: pointer;
+        }
+
+    </style>
+    <script>
+
+
+        $(function(){
+            $('#bannerTop .btnClose').click(function(){
+                $(this).closest('#bannerTop').removeClass('on');
+            });
+        });
+
+        window.onload = function (){
+
+            const priceIns = document.querySelectorAll(".dis_price > :first-child");
+            priceIns.forEach(price =>{
+                let priceInsValue = price.innerText;
+                var formattedNumber = priceInsValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); // "49,770"
+                const formatNumber = formattedNumber.split(".")[0];
+                price.textContent = formatNumber;
+
+            });
+
+
+        }/*
+        // sse 연결
+        const eventSource = new EventSource('/lotteon/connect');
+        eventSource.addEventListener("connect", function (e) {
+            console.log("!!! " + event.data);
+            // 받은 데이터를 화면에 출력 - 확인 완
+            // document.getElementById('sse-data').innerHTML += `<p>${event.data}</p>`;
+        });
+
+
+        // 에러 발생 시 처리할 콜백 함수
+        eventSource.onerror = function(error) {
+            console.error('EventSource failed:', error);
+        };
+        */
+
+        // 최상단 이동 (topButton) 함수 //
+        function movePageTop() {
+            window.scrollTo(0, 0);
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 검색 양식 선택
+            var searchForm = document.querySelector('form');
+            // 검색 양식 제출 이벤트
+            searchForm.addEventListener('submit', function(event) {
+                // 입력된 검색어 확인
+                var searchKeyword = searchForm.elements['searchKeyword'].value.trim();
+                // 검색어가 비어 있는 경우
+                if (searchKeyword === '') {
+                    // 경고창 표시
+                    alert('검색어를 입력하세요.');
+                    // 이벤트 기본 동작(페이지 이동) 중단
+                    event.preventDefault();
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 검색어 입력 필드 선택
+            var searchKeywordInput = document.querySelector('input[name="searchKeyword"]');
+
+            // 입력 필드의 입력 이벤트 감지
+            searchKeywordInput.addEventListener('input', function () {
+                const value = this.value;
+                // 입력된 값이 10글자를 초과하는 경우 잘라내기
+                if (value.length > 10) {
+                    this.value = value.slice(0, 10);
+                    // 사용자에게 경고 메시지 표시 (선택사항)
+                    alert('검색어는 10글자 이하로 입력하세요.');
+                }
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+<div id="bannerTop" class="on" th:style="${topBanners.size() > 0 ? 'background: ' + topBanners[0].backcolor + ';' : ''}">
+    <article>
+        <th:block th:each="banner : ${topBanners}">
+            <a th:href="@{${banner.link}}">
+                <img th:src="@{'/prodImg/'+ ${banner.thumb}}" alt="t1" />
+            </a>
+        </th:block>
+        <button class="btnClose">close</button>
+    </article>
+</div>
+<div id="wrapper">
+    <header>
+        <div class="top">
+            <div>
+                <th:block sec:authorize="isAnonymous()">
+                <a th:href="@{/member/login}">로그인</a>
+                <a th:href="@{/member/join}">회원가입</a>
+                </th:block>
+                <th:block sec:authorize="isAuthenticated()">
+                    <span>[[${#authentication.principal.member.name}]]님 </span>
+                    <a sec:authorize="hasRole('ROLE_6')" th:href="@{/admin}">관리자</a>
+                    <a sec:authorize="hasRole('ROLE_7')" th:href="@{/admin}">관리자</a>
+                    <a sec:authorize="hasRole('ROLE_5')" th:href="@{/seller}">판매자</a>
+                    <a th:href="@{/member/logout}">로그아웃</a>
+                    <a th:href="@{/my/home(uid=${#authentication.principal.member.uid})}">마이페이지</a>
+                    <a th:href="@{/product/cart(uid=${#authentication.principal.member.uid})}">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;장바구니
+                    </a>
+                    <a th:href="@{/my/wish}">
+                        나의 찜
+                    </a>
+                </th:block>
+            </div>
+        </div>
+        <div id="sse-data"></div>
+        <div class="logo">
+            <div>
+                <a th:href="@{/index}"><img th:src="@{/images/header_logo.png}" alt="로고" /></a>
+                <form th:action="@{/product/search}" method="get">
+                    <input type="hidden" name="sort" value="prodNo">
+                    <input type="hidden" name="how" value="DESC">
+                    <input type="text" name="searchKeyword" placeholder="검색" />
+                    <button><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="menu">
+            <div>
+                <ul>
+                    <li><a th:href="@{/product/list2(type='hit')}">히트상품</a></li>
+                    <li><a th:href="@{/product/list2(type='recommend')}">추천상품</a></li>
+                    <li><a th:href="@{/product/list2(type='recent')}">최신상품</a></li>
+                    <li><a th:href="@{/product/list2(type='best')}">인기상품</a></li>
+                    <li><a th:href="@{/product/list2(type='discount')}">할인상품</a></li>
+                </ul>
+                <ul>
+                    <li><a th:href="@{/cs/notice/list(group='notice', cate='null')}">공지사항</a></li>
+                    <li><a th:href="@{/cs/faq/list(group='faq' ,cate='member')}">자주묻는질문</a></li>
+                    <li><a th:href="@{/cs/qna/list(group='qna', cate='member')}">문의하기</a></li>
+                    <li><a th:href="@{/cs/index}">고객센터</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <main>
+        <!-- 카테고리/베스트 상품 영역 -->
+        <aside>
+            <!-- 카테고리 -->
+            <ul class="category">
+                <li><i class="fa fa-bars" aria-hidden="true"></i>카테고리</li>
+                <li th:each="cate1 : ${cate1DTOS}">
+                    <a th:href="@{/product/list(cate1=${cate1.cate1})}">
+                        <i th:class="'fas fa-' + ${cate1.css}"></i>[[${cate1.c1Name}]]<i class="fas fa-angle-right"></i>
+                    </a>
+                    <ol>
+                        <li th:each="cate2 : ${cate2DTOS}" th:if="${cate2.cate1 == cate1.cate1}">
+                            <a th:href="@{/product/list(cate1=${cate2.cate1},cate2=${cate2.cate2})}">[[${cate2.c2Name}]] </a>
+                            <ol>
+                                <li th:each="cate3 : ${cate3DTOS}" th:if="${cate3.cate2 == cate2.cate2}">
+                                    <a th:href="@{/product/list(cate1=${cate2.cate1},cate2=${cate2.cate2},cate3=${cate3.cate3})}">[[${cate3.c3Name}]]</a>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ul>
+
+            <!-- 베스트상품 배너 -->
+            <article class="best">
+                <h1><i class="fas fa-crown"></i>베스트상품</h1>
+                <ol >
+                    <li th:each="best, iterStat : ${bestProducts}" th:if="${iterStat.index == 0}">
+                        <a th:hidden="${iterStat.index}"
+                           th:href="@{/product/view(prodNo=${best.prodNo},cate1=${best.cate1},cate2=${best.cate2},cate3=${best.cate3})}">
+                            <div class="thumb">
+                                <i>1</i>
+                                <img th:src="@{'/prodImg/'+ ${best.thumb1}}" alt="item1" />
+                            </div>
+                            <h2>[[${best.prodName}]]</h2>
+                            <div th:if="${best.price != 0}" class="org_price">
+                                <del>[[${best.price}]]</del>
+                                <span>[[${best.discount}]]%</span>
+                            </div>
+                            <div class="dis_price">
+                                <ins th:if="${best.discount != 0}">[[${((100-best.discount)/100.0)*best.price}]]</ins>
+                                <ins th:if="${best.discount == 0}">[[${best.price}]]</ins>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li th:each="best, iterStat : ${bestProducts}" th:if="${iterStat.index != 0}">
+                        <a th:href="@{/product/view(cate1=${best.cate1})}">
+                            <div class="thumb">
+                                <i>[[${iterStat.index+1}]]</i>
+                                <img th:src="@{'/prodImg/'+ ${best.thumb1}}" alt="item1" />
+                            </div>
+                            <article>
+                                <h2>[[${best.prodName}]]</h2>
+                                <div th:if="${best.discount != 0}" class="org_price">
+                                    <del>[[${best.price}]]</del>
+                                    <span>[[${best.discount}]]%</span>
+                                </div>
+                                <div class="dis_price">
+                                    <ins th:if="${best.discount != 0}">[[${((100-best.discount)/100.0)*best.price}]]</ins>
+                                    <ins th:if="${best.discount == 0}">[[${best.price}]]</ins>
+                                </div>
+                            </article>
+                        </a>
+                    </li>
+
+                </ol>
+            </article>
+        </aside>
+
+        <section layout:fragment="content">
+            <!-- 내용 -->
+        </section>
+    </main>
+
+    <footer>
+        <ul>
+            <li><a th:href="@{/company}">회사소개</a></li>
+            <li><a th:href="@{/policy/terms(termsType=buyer)}">서비스이용약관</a></li>
+            <li><a th:href="@{/policy/terms(termsType=privacy)}">개인정보처리방침</a></li>
+            <li><a th:href="@{/policy/terms(termsType=finance)}">전자금융거래약관</a></li>
+        </ul>
+        <div>
+            <p><img th:src="@{/images/footer_logo.png}" alt="로고" /></p>
+            <p>
+                <strong>(주)롯데ON</strong><br />
+                서울특별시 송파구 올림픽로 300 롯데월드타워 26층 (역삼동 강남파이낸스센터)<br />
+                대표이사 : 김사무엘상현, 정준호, 강성현<br />
+                사업자등록번호 : 529-85-00774(롯데쇼핑(주) e커머스사업부)<br />
+                통신판매업 신고 : 서울송파 제0158호<br>
+                호스팅 서비스사업자 : 롯데쇼핑(주) e커머스사업부
+            </p>
+            <p>
+                <strong>고객센터</strong><br />
+                Tel : 1899-7000(유료) (평일 09:00~18:00)<br />
+                Fax : 051-123-4567 | E-mail : lotteon@lotte.net<br />
+            </p>
+            <p>
+                <strong>[[${appInfo.name}]]-[[${appInfo.version}]]</strong>
+            </p>
+        </div>
+    </footer>
+    <button type="button" id="top" onclick="movePageTop()">상단이동</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/csLayout}">
+<head>
+    <style>
+        button.more {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 16px;
+            font-size: 16px;
+            border-radius: 0 0 5px 5px;
+            box-sizing: border-box;
+            background-color: transparent;
+            border: 0px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button.more:hover {
+            background-color: #f7f7f7;
+        }
+        button.more:active {
+            background-color: #e0e0e0;
+        }
+    </style>
+
+    <script>
+        function toggleButtonText(element) {
+            var text = element.innerText;
+            if (text === '더보기 🔽') {
+                element.innerText = '간단히 보기 🔼';
+            } else {
+                element.innerText = '더보기 🔽';
+            }
+        }
+    </script>
+    <script th:inline="javascript">
+        function showAlert() {
+            // 알림창 띄우기
+            alert('로그인 후에 이용 가능합니다.');
+            // 로그인 페이지로 이동
+            window.location.href = '/lotteon/member/login'; // 로그인 페이지 URL로 변경해주세요.
+        }
+    </script>
+</head>
+
+<section id="cs" layout:fragment = "content">
+    <div class="faq">
+        <nav>
+            <div>
+                <p>홈
+                    <span>></span>
+                    <span th:switch="${group}">
+                      <span th:case="notice" style="font-size: 16px; color: black;">공지사항</span>
+                      <span th:case="qna" style="font-size: 16px; color: black;">고객문의</span>
+                      <span th:case="faq" style="font-size: 16px; color: black;">자주묻는질문</span>
+                      </span>
+                </p>
+            </div>
+        </nav>
+        <section class="list">
+            <aside>
+                <h2>자주묻는 질문</h2>
+                <ul>
+                    <li th:class="${(cate eq 'member') ? 'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='member')}">회원</a></li>
+                    <li th:class="${(cate=='coupon') ? 'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='coupon')}">쿠폰/이벤트</a></li>
+                    <li th:class="${(cate=='order') ? 'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='order')}">주문/결제</a></li>
+                    <li th:class="${(cate=='delivery') ? 'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='delivery')}">배송</a></li>
+                    <li th:class="${(cate=='refund') ? 'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='refund')}">취소/반품/교환</a></li>
+                    <li th:class="${(cate=='travel') ? 'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='travel')}">여행/숙박/항공</a></li>
+                    <li th:class="${(cate=='safe') ?'on' : ''}"><a th:href="@{/cs/faq/list(group='faq',cate='safe')}">안전거래</a></li>
+                </ul>
+            </aside>
+            <article>
+                <nav>
+                 <span th:switch="${cate}">
+                    <span th:case="member">회원</span>
+                    <span th:case="coupon">쿠폰/이벤트</span>
+                    <span th:case="order">주문/결제</span>
+                    <span th:case="delivery">배송</span>
+                    <span th:case="refund">취소/반품/교환</span>
+                    <span th:case="travel">여행/숙박/항공</span>
+                    <span th:case="safe">안전거래</span>
+                 </span>
+                    <h2>가장 자주 묻는 질문입니다.</h2>
+                </nav>
+
+                <div th:each="type : ${types}">
+                    <br>
+                    <h3 th:text="${type.typeName}"></h3>
+                    <ul>
+                        <th:block th:each="dto, index : ${type.boards}" th:if="${dto.typeNo == type.typeNo}">
+                            <li th:class="${index.index lt 3 ? dto.typeNo : 'collapse' + type.typeNo}" th:if="${index.index lt 3}">
+                                <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/cs/faq/view(group=${dto.group}, cate=${dto.cate},bno=${dto.bno})}">
+                                    <span>Q.</span>[[${dto.title}]]
+                                </a>
+                                <a th:unless="${#authorization.expression('isAuthenticated()')}" onclick="showAlert()">
+                                    <span>Q.</span>[[${dto.title}]]
+                                </a>
+                            </li>
+                        </th:block>
+                        <div class="collapse" th:id="'collapseExample_' + ${type.typeNo}">
+                            <th:block th:each="dto, index : ${type.boards}" th:if="${dto.typeNo == type.typeNo && index.index ge 3 && index.index lt 10}">
+                                <li th:class="${index.index ge 3 ? dto.typeNo : '' }">
+                                    <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/cs/faq/view(group=${dto.group}, cate=${dto.cate},bno=${dto.bno})}" style="border-bottom: 1px solid #ccc; border-radius: 0;">
+                                        <span>Q.</span>[[${dto.title}]]
+                                    </a>
+                                    <a th:unless="${#authorization.expression('isAuthenticated()')}" onclick="showAlert()" style="border-bottom: 1px solid #ccc; border-radius: 0;">
+                                        <span>Q.</span>[[${dto.title}]]
+                                    </a>
+                                </li>
+                            </th:block>
+                        </div>
+                        <li th:if="${type.boards.size() > 3}" class="more">
+                            <button type="button" class="more" data-bs-toggle="collapse" th:data-bs-target="'#collapseExample_' + ${type.typeNo}" onclick="toggleButtonText(this);">더보기 🔽</button>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </article>
+        </section>
+    </div>
+</section>

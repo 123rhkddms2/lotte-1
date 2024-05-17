@@ -1,0 +1,72 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/myLayout}">
+<main id="myLayout" layout:fragment="content">
+    <script th:src="@{/js/myInfo.js}"></script>
+        <div id="my">
+
+
+            <div class="qna">
+                <ul>
+                    <span class="menu_else"></span>
+                    <li><a th:href="@{/my/order(uid=${#authentication.principal.member.uid})}">전체주문내역</a></li>
+                    <!--<li><a href="./favorite.html">관심상품</a></li>-->
+                    <li><a th:href="@{/my/point(uid=${#authentication.principal.member.uid})}">포인트내역</a></li>
+                    <li><a th:href="@{/my/coupon(uid=${#authentication.principal.member.uid})}">쿠폰</a></li>
+                    <li><a th:href="@{/my/review(uid=${#authentication.principal.member.uid})}">나의리뷰</a></li>
+                    <li class="on"><a th:href="@{/my/qna(uid=${#authentication.principal.member.uid})}">문의하기</a></li>
+                    <li><a th:href="@{/my/infoAccessCheck(uid=${#authentication.principal.member.uid})}">나의설정</a></li>
+                    <li><a th:href="@{/my/wish}">나의찜</a></li>
+                </ul>
+
+                <section>
+                    <div id="bannerTop" class="on" th:style="${banners.size() > 0 ? 'background: ' + banners[0].backcolor + ';' : ''}">
+                        <!-- 배너 영역 -->
+                        <th:block th:each="banner : ${banners}">
+                            <a th:href="@{${banner.link}}">
+                                <img th:src="@{'/prodImg/'+ ${banner.thumb}}" alt="t1" />
+                            </a>
+                        </th:block>
+                    </div>
+                    <article>
+                        <h3>문의내역</h3>
+
+                        <table border="0">
+                            <tr>
+                                <th>번호</th>
+                                <th>문의유형</th>
+                                <th>제목</th>
+                                <th>작성일</th>
+                                <th>상태</th>
+                            </tr>
+                            <tr th:each="board , index : ${csPageResponseDTO.dtoList}">
+                                <td class="no">[[${index.index + 1}]]</td>
+                                <td class="type">[[${board.cateName}]]</td>
+                                <td class="tit"><a th:href="@{/cs/qna/view(group=${board.group},cate=${board.cate},bno=${board.bno})}">[[${board.title}]]</a></td>
+                                <td class="date">[[${#temporals.format(board.rdate, 'yyyy-MM-dd')}]]</td>
+                                <td class="status" th:style="${board.status == '답변완료'} ? 'font-weight: bold;' : 'color: #999'">
+                                    [[${board.status}]]
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <div class="page">
+                <span class="prev" th:if="${csPageResponseDTO.prev}">
+                  <a th:href="@{/my/qna(pg=${csPageResponseDTO.start - 1},uid=${#authentication.principal.member.uid})}"><&nbsp;이전</a>
+                </span>
+                   <span th:each="num : ${#numbers.sequence(csPageResponseDTO.start, csPageResponseDTO.end)}" class="num">
+                  <a th:href="@{/my/qna(pg=${num},uid=${#authentication.principal.member.uid})}">
+                      [[${num}]]
+                  </a>
+                </span>
+                            <span class="next" th:if="${csPageResponseDTO.next}">
+                  <a th:href="@{/my/qna(pg=${csPageResponseDTO.end + 1},uid=${#authentication.principal.member.uid})}">다음&nbsp;></a>
+                </span>
+                        </div>
+                    </article>
+                </section>
+
+            </div>
+        </div>        
+</main>

@@ -1,0 +1,659 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/sellerLayout}">
+<section id="admin-product-register" layout:fragment="content">
+    <script>
+        let optionOk = true; // 옵션 체크 확인
+        let thumb1Check = 1; // 썸네일 1 개수
+        let thumb2Check = 1; // 썸네일 2 개수
+        let thumb3Check = 1; // 썸네일 3 개수
+        let detailCheck = 1; // 디테일 이미지 4 개수
+        // 삭제 할 옵션 번호 배열
+        let delOpNoArray = [];
+        // cate1 선택 시 cate2 조회
+        async function findCate2(cate1){
+            const cate2Select = document.getElementById('cate2');
+            console.log(cate1);
+            const cate2s = await fetchGet(`/lotteon/seller/product/register/${cate1}`)
+            // 기존 <option> 태그들 삭제
+            cate2Select.innerHTML = "";
+            for(const cate2 of cate2s){
+                const cate2Option = `<option value="${cate2.cate2}">${cate2.c2Name}</option>`;
+                console.log("cate2Option : " + cate2Option);
+                // 태그 문자열 삽입
+                cate2Select.insertAdjacentHTML('beforeend', cate2Option);
+            }
+            if (cate1 === '30') {
+                document.getElementById('amountTr').style.display = 'table-row';
+                document.getElementById('eOptionInputPanel').style.display = 'none';
+            } else{
+                document.getElementById('amountTr').style.display = 'none';
+                document.getElementById('eOptionInputPanel').style.display = 'none';
+            }
+        }
+        // 판매 가격의 1%를 포인트에 자동 입력
+        function inputPoint(textPrice){
+            const pointInput = document.getElementById('pointInput');
+            const price = Number(textPrice);
+            if (price > 100){
+                pointInput.value =  Math.floor(price / 100);
+            }
+        }
+        // cate2 선택시 cate3 조회 + option 선택 Div 공개
+        const eOptionInputPanel = document.getElementById('eOptionInputPanel');
+        async function prodOption(cate2){
+            console.log("cate2" + cate2);
+
+            // cate3 조회
+            await findCate3(cate2);
+                optionOk = true;
+                document.getElementById('eOptionInputPanel').style.display = 'none';
+
+        }
+        // cate3 조회
+        async function findCate3(cate2){
+            const cate3Select = document.getElementById('cate3');
+            console.log(cate2);
+            const cate3s = await fetchGet(`/lotteon/seller/product/cate3/${cate2}`)
+            // 기존 <option> 태그들 삭제
+            cate3Select.innerHTML = "";
+            for(const cate3 of cate3s){
+                const cate3Option = `<option value="${cate3.cate3}">${cate3.c3Name}</option>`;
+                console.log("cate3Option : " + cate3Option);
+                // 태그 문자열 삽입
+                cate3Select.insertAdjacentHTML('beforeend', cate3Option);
+            }
+        }
+        let optionCount = [[${optionMap.size}]];
+        // 그 외 option 입력란 추가
+        function addEtcOption(button) {
+            console.log('옵션 개수 : '+optionCount);
+            if(optionCount < 3) {
+                optionCount ++;
+                // tr 태그 생성 : node를 복사해서 appendChild하면 증가된 option div까지 전부 복사됨
+                const tr = document.createElement('tr');
+                const tableBody = document.querySelector('#optionTable');
+
+                const innerTr = `<td>
+                        <datalist id="list${optionCount}" >
+                            <option>색상</option>
+                            <option>사이즈</option>
+                            <option>소재</option>
+                        </datalist>
+                        <input type="text" name="opName" list="list${optionCount}" class="optionName">
+                    </td>
+                    <td class="left eBubbleArea">
+                        <div class="optionDiv">
+                        <input id="optionValue" name="colorName" type="text" class="fText optionValue"
+                               style="width:150px;" placeholder="옵션 값을 입력">
+                        <span class="spanBtn btnOption lv1Minus vaBottom" onclick="minusNewValue(this)">옵션 값 삭제</span>
+                        <span class="spanBtn btnOption lv1Plus vaBottom" onclick="plusValueInput(this)">옵션 값 추가</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="button">
+                            <button type="button" class="btnOption lv1Minus vaBottom" onclick="removeNewOption(this)">
+                                <span>삭제</span></button>
+                            <button type="button" class="btnOption lv1Plus vaBottom" onclick="addEtcOption(this)">
+                                <span>추가</span></button>
+                        </div>
+                    </td>`;
+
+                tr.classList.add('eHeading', 'manualOptionRow', 'optionEtcListTr');
+                tr.innerHTML = innerTr;
+                tableBody.appendChild(tr);
+
+            }else{
+                alert('옵션 분류는 세개가 최대입니다.');
+            }
+        }
+
+        // 옵션값 추가
+        function plusValueInput(span) {
+            const td = span.closest('td');
+
+            optionOk = false;
+            // 기존 optionDiv 태그 복사
+            const optionDiv = document.querySelector('.optionDiv').cloneNode(true);
+            td.appendChild(optionDiv);
+        }
+
+        // 옵션 이름 삭제 - 해당 옵션값의 opNo를 전부 구해야함
+        function removeOption(button) {
+            const tr = button.closest('tr');
+
+            // 해당 옵션의 opNo 들 가져오기
+            const opNos = tr.querySelectorAll('.opNoInput');
+
+            optionOk = false;
+
+            // 각 opNo 값을 배열에 추가
+            for (const opNoInput of opNos) {
+                // 삭제할 opNo 배열에 넣기
+                delOpNoArray.push(opNoInput.value);
+                console.log("옵션 (이름) 삭제 1 opNo :" + opNoInput.value);
+            }
+
+            console.log("옵션 (이름) 삭제 2 opNo :" + delOpNoArray);
+
+            // option 입력란 삭제
+            tr.remove();
+
+            // 현재 옵션(이름) 개수 --
+            optionCount --;
+
+            console.log("옵션 삭제 2 optionCount :" + optionCount);
+        }
+        // 기존 옵션값 삭제
+        function minusValueInput(span) {
+            const optionDiv = span.closest('div');
+            const delOpNo = optionDiv.querySelector('.opNoInput').value;
+
+            optionOk = false;
+
+            // 삭제할 옵션 배열에 추가
+            delOpNoArray.push(delOpNo);
+
+            optionDiv.remove();
+        }
+        // 추가된 옵션 (이름) 삭제
+        function removeNewOption(button){
+            // option 입력란 삭제
+            const tr = button.closest('tr');
+            tr.remove();
+
+            optionOk = false;
+
+            // 현재 옵션(이름) 개수 --
+            optionCount --;
+        }
+        // 추가된 옵션 (값) 삭제
+        function minusNewValue(span){
+
+            optionOk = false;
+
+            // option 값 입력란 삭제
+            const optionDiv = span.closest('div');
+            optionDiv.remove();
+        }
+        // 현재 옵션 저장 버튼 클릭
+        async function pushEtcOptionList(e){
+            e.preventDefault();
+            const prodNo = [[${product.prodNo}]];
+
+            const trList = document.getElementsByClassName('optionEtcListTr');
+            const optionList = [];
+            optionList.length = 0;
+            optionOk = true;
+            // 각 tr 요소에 대해 반복
+            for (const tr of trList) {
+                const optionName = tr.querySelector('.optionName');
+                const opName = optionName.value;
+                console.log("opName : " + opName);
+                const optionValueList = tr.getElementsByClassName('optionValue');
+
+                // 각 optionValue Input 요소에 대해 반복
+                for(const optionValue of optionValueList){
+                    const opValue = optionValue.value;
+                    console.log("opValue : " + opValue);
+                    // OptionDTO 객체 생성
+                    const optionDTO = {
+                        "prodNo" : prodNo,
+                        "opName": opName,
+                        "opValue": opValue
+                    };
+
+                    // OptionDTO 객체를 배열에 추가
+                    optionList.push(optionDTO);
+                    console.log(optionList);
+                }
+
+            }
+            // 삭제를 누른 옵션 정보 저장
+            const opNoList = document.getElementById('opNoList');
+            // 옵션번호 배열을 JSON 문자열로 변환하여 할당
+            opNoList.value = JSON.stringify(delOpNoArray);
+
+            const jsonData = JSON.stringify(optionList);
+            console.log("aaaa : " + jsonData);
+            // 서버에 전송
+            await fetch('/lotteon/seller/option', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(optionList)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('옵션 등록을 실패했습니다.');
+                    }
+                    return response.json()
+                })
+                .catch(err => console.log(err))
+            console.log(optionList);
+
+            alert('옵션 등록 성공');
+        }
+        // form 전송 전에 옵션 추가했는지, 이미지 개수 확인
+        function optionOkOk(e){
+            e.preventDefault();
+            const prodForm = document.getElementById('prodForm');
+
+            if(thumb1Check !== 1 || thumb2Check !== 1 || thumb3Check !== 1 || detailCheck !== 1){
+                alert('모든 상품 이미지는 1개씩 등록해야합니다.');
+            } else if (!optionOkOk) {
+                alert('현재 옵션 저장을 완료해야합니다.');
+            } else {
+                prodForm.submit();
+            }
+        }
+
+        // 이미지 삭제 (숨겼다가 form 전송)
+        function hideImage(button){
+            // 원래 이미지 이름을 가진 히든 태그
+            const orgThumb1 = document.getElementById('orgThumb1');
+            const orgThumb2 = document.getElementById('orgThumb2');
+            const orgThumb3 = document.getElementById('orgThumb3');
+            const orgDetail = document.getElementById('orgDetail');
+
+            // 이미지 숨기기
+            const tagP = button.parentNode;
+            tagP.remove();
+
+            // 이미지 개수 갱신
+            const imgType = button.dataset.img;
+            switch (imgType) {
+                case 'thumb1':
+                    thumb1Check -= 1;
+                    orgThumb1.remove();
+                    break;
+                case 'thumb2':
+                    thumb2Check -= 1;
+                    orgThumb2.remove();
+                    break;
+                case 'thumb3':
+                    thumb3Check -= 1;
+                    orgThumb3.remove();
+                    break;
+                case 'detail':
+                    detailCheck -= 1;
+                    orgDetail.remove();
+                    break;
+            }
+        }
+        // 이미지 파일 추가 시 파일 개수 확인
+        async function imgCountCk(input) {
+            const imgType = input.name;
+            // 이미지 개수 갱신
+            switch (imgType) {
+                case 'thumb190':
+                    if (thumb1Check > 0) {
+                        alert('기존 이미지를 삭제하셔야합니다.');
+                        break;
+                    }
+                    thumb1Check += 1;
+                    console.log("추가한 이미지 미리보기 호출 전 ");
+                    await addImgView(input);
+                    break;
+                case 'thumb230':
+                    if (thumb2Check > 0) {
+                        alert('기존 이미지를 삭제하셔야합니다.');
+                        break;
+                    }
+                    thumb2Check += 1;
+                    await addImgView(input);
+                    break;
+                case 'thumb456':
+                    if (thumb3Check > 0) {
+                        alert('기존 이미지를 삭제하셔야합니다.');
+                        break;
+                    }
+                    thumb3Check += 1;
+                    await addImgView(input);
+                    break;
+                case 'detail860':
+                    if (detailCheck > 0) {
+                        alert('기존 이미지를 삭제하셔야합니다.');
+                        break;
+                    }
+                    detailCheck += 1;
+                    await addImgView(input);
+                    break;
+            }
+        }
+        // 추가한 이미지 미리보기
+        async function addImgView(input){
+            console.log("추가한 이미지 미리보기 1 ");
+            const targetTd = input.closest('td');
+
+            let file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                console.log("추가한 이미지 미리보기 2 ");
+
+                // 새로 추가된 <P>
+                const tagP = document.createElement('p');
+                tagP.style.display = 'inline-block';
+                tagP.style.position = 'relative';
+                tagP.style.marginRight = '10px';
+
+                const imgSrc = e.target.result;
+                const img = `<img src= "${imgSrc}"
+                                class="thumb" alt="상품이미지" style="width: 200px; height: 200px;display: block;"/>
+                           <button type="button" onclick="hideImage(this)" data-img="thumb1" style="position: absolute; top: 0; left: 0; font-size: 20px;">X</button>`
+
+                tagP.insertAdjacentHTML('beforeend', img);
+                targetTd.appendChild(tagP);
+            }
+            reader.readAsDataURL(file);
+        }
+    </script>
+                <nav>
+                    <h3>상품수정</h3>
+                    <p>
+                        HOME > 상품관리 > <strong>상품수정</strong>
+                    </p>
+                </nav>
+                <!-- 상품수정 컨텐츠 시작 -->
+                <article>
+                    <form th:action="@{/seller/product/modify}" method="post" enctype="multipart/form-data" id="prodForm">
+                        <!-- 이미지 sName -->
+                        <input type="hidden" name="prodNo" th:value="${product.prodNo}" id="prodNo"/>
+                        <input type="hidden" name="thumb1" th:value="${product.thumb1}" id="orgThumb1"/>
+                        <input type="hidden" name="thumb2" th:value="${product.thumb2}" id="orgThumb2"/>
+                        <input type="hidden" name="thumb3" th:value="${product.thumb3}" id="orgThumb3"/>
+                        <input type="hidden" name="hit" th:value="${product.hit}"/>
+                        <input type="hidden" name="review" th:value="${product.review}"/>
+                        <input type="hidden" name="score" th:value="${product.score}"/>
+                        <input type="hidden" name="sold" th:value="${product.sold}"/>
+                        <input type="hidden" name="ip" th:value="${product.ip}"/>
+                        <input type="hidden" name="detail" th:value="${product.detail}"/>
+                        <!-- 상품분류 -->
+                        <section>
+                            <h4>상품분류</h4>
+                            <p>
+                                기본분류는 반드시 선택하셔야 합니다. 하나의 상품에 1개의 분류를 지정 합니다.
+                            </p>
+                            <table>
+                                <tr>
+                                    <td>1차 분류</td>
+                                    <td>
+                                        <select name="cate1" id="cate1" onchange="findCate2(this.value)">
+                                            <th:block th:each="cate1, loop :${cate1List}">
+                                                <option th:value="${cate1.cate1}" th:selected="${cate1.cate1 == product.cate1}">[[${cate1.c1Name}]]</option>
+                                            </th:block>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2차 분류</td>
+                                    <td>
+                                        <select name="cate2" id="cate2" onchange="prodOption(this.value)">
+                                            <th:block th:each="cate2, loop :${cate2List}">
+                                                <option th:value="${cate2.cate2}" th:selected="${cate2.cate2 == product.cate2}">[[${cate2.c2Name}]]</option>
+                                            </th:block>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3차 분류</td>
+                                    <td>
+                                        <select name="cate3" id="cate3">
+                                            <th:block th:each="cate3, loop :${cate3List}">
+                                                <option th:value="${cate3.cate3}" th:selected="${cate3.cate3 == product.cate3}">[[${cate3.c3Name}]]</option>
+                                            </th:block>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </section>
+
+                        <!-- 기본정보 -->
+                        <section class="productInfo">
+                            <h4>기본정보</h4>
+                            <p>
+                                기본정보는 반드시 입력해야 합니다.
+                            </p>
+                            <table class="productTable">
+                                <tr>
+                                    <td>상품명</td>
+                                    <td><input type="text" name="prodName" th:value="${product.prodName}"/></td>
+                                </tr>
+                                <tr>
+                                    <td>기본설명</td>
+                                    <td>
+                                        <span>상품명 하단에 상품에 대한 추가적인 설명이 필요한 경우에 입력</span>
+                                        <input type="text" name="descript" th:value="${product.descript}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>제조사</td>
+                                    <td><input type="text" name="company" th:value="${product.company}"/></td>
+                                </tr>
+                                <tr>
+                                    <td>판매가격</td>
+                                    <!-- 포인트 계산 함수 호출 -->
+                                    <td><input type="text" name="price" onchange="inputPoint(this.value)" th:value="${product.price}"/> 원</td>
+                                </tr>                                    
+                                <tr>
+                                    <td>할인율</td>
+                                    <td>
+                                        <span>0을 입력하면 할인율 없음</span>
+                                        <input type="text" name="discount" th:value="${product.discount}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>포인트</td>
+                                    <td>
+                                        <span>0을 입력하면 포인트 없음</span>
+                                        <input type="text" name="point" id="pointInput" placeholder="판매가격의 1% 자동 입력" th:value="${product.point}"/> 점
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>재고수량</td>
+                                    <td><input type="text" name="stock" th:value="${product.stock}"/> 개</td>
+                                </tr>
+                                <tr style="display: none" id="amountTr">
+                                    <td>무게</td>
+                                    <td><input type="text" name="amount" value="0" th:value="${product.amount}"/> g</td>
+                                </tr>
+                                <tr>
+                                    <td>배송비</td>
+                                    <td>
+                                        <span>0을 입력하면 배송비 무료</span>
+                                        <input type="text" name="delivery" th:value="${product.delivery}"/> 원
+                                    </td>
+                                </tr>
+
+                                <!-- 상품 이미지 -->
+                                <tr>
+                                    <td>상품 목록 썸네일</td>
+                                    <td>
+                                        <span>크기 190 x 190, 상품 목록에 출력될 이미지 입니다. </span>
+                                        <!-- 파일첨부 -->
+                                        <div class="filebox">
+                                            <label for="thumb190"> 파일선택</label>
+                                            <input class="form-control" type="file" name="thumb190" id="thumb190" multiple onchange="imgCountCk(this)">
+                                        </div>
+                                        <p th:style="'display: inline-block; position: relative; margin-right: 10px;'">
+                                            <img th:src="@{'/prodImg/'+${product.thumb1}}"
+                                                 class="thumb" alt="상품이미지" style="width: 200px; height: 200px;display: block;"/>
+                                            <button type="button" onclick="hideImage(this)" data-img="thumb1" style="position: absolute; top: 0; left: 0; font-size: 20px;">X</button>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>상품 메인 썸네일</td>
+                                    <td>
+                                        <span>크기 230 x 230, 상품 메인에 출력될 이미지 입니다. </span>
+                                        <!-- 파일첨부 -->
+                                        <div class="filebox">
+                                            <label for="thumb230"> 파일선택</label>
+                                            <input class="form-control" type="file" name="thumb230" id="thumb230" multiple onchange="imgCountCk(this)">
+                                        </div>
+                                        <p th:style="'display: inline-block; position: relative; margin-right: 10px;'">
+                                            <img th:src="@{'/prodImg/'+${product.thumb2}}"
+                                                 class="thumb" alt="상품이미지" style="width: 200px; height: 200px; display: block;"/>
+                                            <button type="button" onclick="hideImage(this)" data-img="thumb2" style="position: absolute; top: 0; left: 0; font-size: 20px;">X</button>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>상품 상세 썸네일</td>
+                                    <td>
+                                        <span>크기 456 x 456, 상품 상세에 출력될 이미지 입니다. </span>
+                                        <!-- 파일첨부 -->
+                                        <div class="filebox">
+                                            <label for="thumb456"> 파일선택</label>
+                                            <input class="form-control" type="file" name="thumb456" id="thumb456" multiple onchange="imgCountCk(this)">
+                                        </div>
+                                        <p th:style="'display: inline-block; position: relative; margin-right: 10px;'">
+                                            <img th:src="@{'/prodImg/'+${product.thumb3}}"
+                                                 class="thumb" alt="상품이미지" style="width: 200px; height: 200px; display: block;"/>
+                                            <button type="button" onclick="hideImage(this)" data-img="thumb3" style="position: absolute; top: 0; left: 0; font-size: 20px;">X</button>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>상세 상품정보</td>
+                                    <td>
+                                        <span>크기 가로 860px 높이 제약없음, 크기 최대 1MB, 상세페이지 상품정보에 출력될 이미지 입니다.</span>
+                                        <!-- 파일첨부 -->
+                                        <div class="filebox">
+                                            <label for="detail860"> 파일선택</label>
+                                            <input class="form-control" type="file" name="detail860" id="detail860" multiple onchange="imgCountCk(this)">
+                                        </div>
+                                        <p th:style="'display: inline-block; position: relative; margin-right: 10px;'">
+                                            <img th:src="@{'/prodImg/'+${product.detail}}"
+                                                 class="thumb" alt="상품이미지" style="width: 200px; height: auto; display: block;"/>
+                                            <button type="button" onclick="hideImage(this)" data-img="detail" style="position: absolute; top: 0; left: 0; font-size: 20px;">X</button>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>                                
+                        </section>
+
+                        <!-- 상품 옵션 추가 -->
+                        <div id="optionInputPanel" class="addForm _self_option_wrap" >
+                            <h4>옵션</h4>
+                            <p>
+                                반드시 현재 옵션 저장을 하셔야 합니다. 등록된 상품은 같은 상품코드가 부여됩니다.
+                            </p>
+                            <div class="mBoard gCellSingle">
+                                <table border="1" summary="" id="optionTable" class="prodOptionTable">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">옵션분류</th>
+                                        <th scope="col">옵션값</th>
+                                        <th scope="col">분류추가</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="center" id="optionTbody">
+                                    <!-- 추가 상품 옵션 -->
+                                    <th:block th:if="${optionMap.isEmpty()}">
+                                    <tr class="eHeading manualOptionRow optionEtcListTr" optiongroup="0">
+                                        <td>
+                                            <datalist id="list1" class="list">
+                                                <option>색상</option>
+                                                <option>사이즈</option>
+                                                <option>소재</option>
+                                            </datalist>
+                                            <input type="text" name="opName" list="list1" class="optionName">
+                                        </td>
+                                        <td class="left eBubbleArea">
+                                            <div class="optionDiv">
+                                                <input id="optionValue" name="optionValue" type="text" class="fText optionValue"
+                                                       style="width:150px;" placeholder="옵션 값을 입력">
+                                                <span class="spanBtn btnOption lv1Minus vaBottom" onclick="minusValueInput(this)">옵션 값 삭제</span>
+                                                <span class="spanBtn btnOption lv1Plus vaBottom" onclick="plusValueInput(this)">옵션 값 추가</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="button">
+                                                <button type="button" class="btnOption lv1Minus vaBottom" onclick="removeOption(this)">
+                                                    <span>삭제</span></button>
+                                                <button type="button" class="btnOption lv1Plus vaBottom" onclick="addEtcOption(this)">
+                                                    <span>추가</span></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </th:block>
+                                    <!-- 기존 상품 옵션 -->
+                                    <th:block th:if="${!optionMap.isEmpty()}">
+                                    <tr class="eHeading manualOptionRow" optiongroup="0" th:each="entry, loop : ${optionMap}">
+                                        <td>
+                                            <datalist th:id="'list' + ${loop.index + 1}" class="list">
+                                                <option>색상</option>
+                                                <option>사이즈</option>
+                                                <option>소재</option>
+                                            </datalist>
+                                            <input type="text" name="opName" th:list="'list' + ${loop.index + 1}" class="optionName" th:value="${entry.key}">
+                                        </td>
+                                        <td class="left eBubbleArea">
+                                            <div class="optionDiv" th:each="optionList : ${entry.value}">
+                                                <input type="text" class="fText optionValue" style="width:150px;" placeholder="옵션 값을 입력" th:value="${optionList.opValue}">
+                                                <input type="hidden" name="opNo" class="opNoInput" th:value="${optionList.opNo}">
+                                                <span class="spanBtn btnOption lv1Minus vaBottom" onclick="minusValueInput(this)">옵션 값 삭제</span>
+                                                <span class="spanBtn btnOption lv1Plus vaBottom" onclick="plusValueInput(this)">옵션 값 추가</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="button">
+                                                <button type="button" class="btnOption lv1Minus vaBottom" onclick="removeOption(this)">
+                                                    <span>삭제</span>
+                                                </button>
+                                                <button type="button" class="btnOption lv1Plus vaBottom" onclick="addEtcOption(this)">
+                                                    <span>추가</span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="gRight">
+                                <button id="optionSubmit2" onclick="pushEtcOptionList(event)">현재 옵션 저장</button>
+                            </div>
+                        </div>
+                        <!-- 상품정보 제공 고시 -->
+                        <section>
+                            <h4>상품정보 제공고시</h4>
+                            <p>
+                                [전자상거래에 관한 상품정보 제공에 관한 고시] 항목에 의거 등록해야 되는 정보입니다.
+                            </p>
+                            <table>
+                                <tr>
+                                    <td>상품상태</td>
+                                    <td><input type="text" name="status" th:value="${product.status}" id="orgStatus"/></td>
+                                </tr>
+                                <tr>
+                                    <td>부가세 면세여부</td>
+                                    <td><input type="text" name="duty" th:value="${product.duty}" id="orgDuty"/></td>
+
+                                </tr>
+                                <tr>
+                                    <td>영수증발행</td>
+                                    <td><input type="text" name="receipt" th:value="${product.receipt}" id="orgReceipt"/></td>
+                                </tr>
+                                <tr>
+                                    <td>사업자구분</td>
+                                    <td><input type="text" name="bizType" th:value="${product.bizType}" id="orgBizType"/></td>
+                                </tr>
+                                <tr>
+                                    <td>원산지</td>
+                                    <td><input type="text" name="origin" th:value="${product.origin}" id="orgOrigin"/></td>
+                                </tr>
+
+                            </table>                                
+                        </section>
+                        <input type="hidden" name="opNoList" id="opNoList">
+                        <input type="submit" value="등록하기" onclick="optionOkOk(this)"/>
+                    </form>
+                </article>
+
+                <p class="ico alert">
+                    <strong>Warning!</strong>
+                    전자상거래 등에서의 상품 등의 정보제공에 관한 고시에 따라 총 35개 상품군에 대해 상품 특성 등을 양식에 따라 입력할 수 있습니다.
+                </p>
+                <!-- 상품등록 컨텐츠 끝 -->
+            </section>

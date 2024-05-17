@@ -1,0 +1,139 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/myLayout}">
+<main id="myLayout" layout:fragment="content">
+    <script th:src="@{/js/myInfo.js}"></script>
+    <script th:src="@{/js/point.js}" th:inline="javascript"></script>
+    <script>
+        window.onload = function (){
+            // JavaScript를 사용하여 현재 날짜를 가져옴
+            const currentDate = new Date();
+            // 년도, 월, 일을 가져와서 문자열로 만듦
+            const year = currentDate.getFullYear().toString().slice(-2);
+            const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 두 자리수로 만들고 0 삽입
+            const day = ('0' + currentDate.getDate()).slice(-2); // 두 자리수로 만들고 0 삽입 '-' + currentDate.getDate();
+
+            const formattedDate = year + month + day;
+            console.log(formattedDate)
+
+
+            var strDateP;
+            var dateP;
+
+            //포인트 적립 및 소멸 구분
+            document.querySelectorAll('#point').forEach(function (point){
+
+                point.querySelectorAll('#pointDate').forEach(function (date){
+                    strDateP=date.innerText;
+                    dateP=new Date(strDateP);
+
+                })
+                console.log("계산전 만료 날짜"+dateP)
+                console.log("현재날짜"+currentDate);
+
+                const timeDiff = currentDate.getTime() - dateP.getTime();
+                const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+                console.log('현재날짜와 소멸날짜의 차이:', diffDays);
+
+                point.querySelectorAll('#state').forEach(function (pointState){
+
+                    if(diffDays>1||diffDays===0){
+                        pointState.innerHTML='';
+                        pointState.innerText='소멸';
+                        pointState.style.color = '#999'
+
+                    }else if(diffDays<0){
+                        pointState.innerHTML='';
+                        pointState.innerText='적립';
+                    }else if(diffDays===1){
+                        pointState.innerHTML='';
+                        pointState.innerText='소멸예정';
+                        pointState.style.color = '#ef2a23'
+                    }
+                })
+            })
+        }
+    </script>
+
+    <div id="my">
+        <div class="point">
+            <ul>
+                <span class="menu_else"></span>
+                <li><a th:href="@{/my/order(uid=${#authentication.principal.member.uid})}">전체주문내역</a></li>
+                <li><a th:href="@{/my/point(uid=${#authentication.principal.member.uid})}" class="on">포인트내역</a></li>
+                <li><a th:href="@{/my/coupon(uid=${#authentication.principal.member.uid})}">쿠폰</a></li>
+                <li><a th:href="@{/my/review(uid=${#authentication.principal.member.uid})}">나의리뷰</a></li>
+                <li><a th:href="@{/my/qna(uid=${#authentication.principal.member.uid})}">문의하기</a></li>
+                <li><a th:href="@{/my/infoAccessCheck(uid=${#authentication.principal.member.uid})}">나의설정</a></li>
+                <li><a th:href="@{/my/wish}">나의찜</a></li>
+            </ul>
+            <section>
+                <div id="bannerTop" class="on" th:style="${banners.size() > 0 ? 'background: ' + banners[0].backcolor + ';' : ''}">
+                    <!-- 배너 영역 -->
+                    <th:block th:each="banner : ${banners}">
+                        <a th:href="@{${banner.link}}">
+                            <img th:src="@{'/prodImg/'+ ${banner.thumb}}" alt="t1" />
+                        </a>
+                    </th:block>
+                </div>
+                <article>
+                    <h3>포인트내역</h3>
+                    <div class="byDate">
+                        <span class="tit">기간별조회</span>
+                        <ul class="date_3ea">
+                            <li><a href="#" class="datePick" onclick="changeDate(this, 'week'); return false;"><em>1</em>주일</a></li>
+                            <li><a href="#" class="datePick" onclick="changeDate(this, '14days'); return false;"><em>14</em>일</a></li>
+                            <li><a href="#" class="datePick" onclick="changeDate(this, 'month'); return false;"><em>1</em>개월</a></li>
+                        </ul>
+
+
+                        <ul class="date_5ea">
+                        </ul>
+                        <p>
+                            <input type="date" name="begin"><span>~</span><input type="date" name="end">
+                        </p>
+                        <button class="btnConfirm">조회하기</button>
+                    </div>
+                    <table class="pointList" border="0">
+                        <thead>
+                        <tr>
+                            <th>적립날짜</th>
+                            <th>구분</th>
+                            <th>주문번호</th>
+                            <th>적립금액</th>
+                            <th>비고</th>
+                            <th>유효기간</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr id="point" th:each="point : ${pointPageResponseDTO.dtoList}">
+                            <td id="currentDate">[[${#temporals.format(point.currentDate, 'yyyy-MM-dd')}]]</td>
+                            <td id="state"></td>
+                            <td class="ordNo">[[${point.ordNo}]]</td>
+                            <td th:text="${point.point}"></td>
+                            <td th:text="${point.usecase}"></td>
+                            <td id="pointDate">[[${#temporals.format(point.pointDate, 'yyyy-MM-dd')}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:unless="${#lists.isEmpty(pointPageResponseDTO.dtoList)}" class="page">
+                        <span th:if="${pointPageResponseDTO.prev}" class="prev">
+                            <a th:href="@{/my/point(uid=${#authentication.principal.member.uid}, pg=${pointPageResponseDTO.start - 1})}">이전</a>
+                        </span>
+                        <span th:each="num: ${#numbers.sequence(pointPageResponseDTO.start, pointPageResponseDTO.end)}">
+                            <a th:href="@{/my/point(uid=${#authentication.principal.member.uid}, pg=${num})}"
+                               th:class="${pointPageResponseDTO.pg eq num ? 'num on' : 'num'}" th:text="${num}"></a>
+                        </span>
+                        <span th:if="${pointPageResponseDTO.next}" class="next">
+                            <a th:href="@{/my/point(uid=${#authentication.principal.member.uid}, pg=${pointPageResponseDTO.end + 1})}">다음</a>
+                        </span>
+                    </div>
+                    <div th:if="${#lists.isEmpty(pointPageResponseDTO.dtoList)}">
+                        <p style="text-align: center; margin-top: 20px;">조회된 포인트 내역이 없습니다.</p>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </div>
+</main>

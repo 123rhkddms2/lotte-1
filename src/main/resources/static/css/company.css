@@ -1,0 +1,635 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font: normal 16px "Noto Sans CJK KR";
+}
+ul, ol {list-style: none;}
+a {text-decoration: none; color: #111111; font-weight: bold}
+
+/* header */
+header {
+  position: fixed;
+  width: 100%;
+  height: 80px;
+  z-index: 100;
+  border-bottom: 1px solid #e1e1e1;
+  transition-duration: 0.5s;
+}
+header > div {
+  width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding-top: 16px;
+  box-sizing: border-box;
+}
+
+header ul {
+  float: right;
+  margin-top: 16px;
+  overflow: hidden;
+}
+header ul > li {
+  float: left;
+  width: 120px;
+  text-align: center;
+}
+
+header ul > li > a {
+  font-size: 16px;
+}
+
+/* footer */
+footer {
+  width: 100%;
+  height: 100px;
+  background-color: #f9f9f9;
+  z-index: 100;
+}
+footer > div {
+  width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+footer img {
+  float:left;
+  margin-top: 22px;
+}
+footer p {
+  float:left;
+  margin-left: 26px;
+  margin-top: 22px;
+  font-size: 13px;
+  color: #666;
+  line-height: 20px;
+}
+
+
+/* index */
+.swiper-slide > section {
+  position: relative;
+  width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+h1.tit1 {
+  position: absolute;
+  font-weight: normal;
+  font-size: 30px;
+  color: #555;
+}
+
+h2.tit2 {
+  position: absolute;
+  font-weight: bold;
+  font-size: 46px;
+  color: #111;
+}
+
+p.desc {
+  position: absolute;
+  font-size: 18px;
+  line-height: 28px;
+  color: #666;
+}
+
+.slide2 .tit1 {left: 0px; top: 250px;}
+.slide2 .tit2 {left: 0px; top: 310px;}
+.slide2 .desc {left: 0px; top: 420px;}
+
+.slide3 .tit1 {left: 150px; top: 10px;}
+.slide3 .tit2 {left: 250px; top: 70px;}
+.slide3 .desc {left: 720px; top: 320px;}
+
+.slide4 .tit1 {left: 160px; top: 120px;}
+.slide4 .tit2 {left: 40px; font-size:30px; margin-bottom: 100px;}
+.slide4 .desc {left: 160px; bottom: 120px;}
+
+/*추가*/
+.btnDiv {
+  margin: 10px;
+  float: right;
+}
+
+.swiper-slide > section > div:nth-child(2) {
+  margin-top: 130px;
+  padding: 20px;
+  padding-top: 50px;
+}
+
+
+
+/* Swiper ê´€ë ¨ */
+.swiper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-position-x: 50%;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+}
+
+.swiper-slide video {
+  width: 100%;
+  min-width: 1600px;
+  height: auto;
+}
+.slide2 {background-image: url('../company/images/bg_highAndTech.png');}
+.slide3 {background-image: url('../company/images/bg_history.png'); margin-top: 100px;     background-size: contain;
+}
+/*.slide4 {background-image: url('../images/bg_product_sec.jpg');}*/
+
+.scroll-icon {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 34px;
+  height: 62px;
+  border: 2px solid rgba(155, 155, 155, 0.8);
+  border-radius: 25px;
+}
+
+.scroll-icon span {
+  width: 4px;
+  height: 4px;
+  background-color: #999;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+
+.scroll-icon span:nth-of-type(1) {
+  animation: scroll-icon .9s -2.3s infinite reverse;
+}
+.scroll-icon span:nth-of-type(2) {
+  margin: 4px auto;
+  animation: scroll-icon .9s -1.3s infinite reverse;
+}
+.scroll-icon span:nth-of-type(3) {
+  animation: scroll-icon .9s -.3s infinite reverse;
+}
+
+@keyframes scroll-icon {
+  from {
+    opacity: .1;
+  }
+
+  to {
+    opacity: .6;
+  }
+}
+
+/* 헤더 공통 */
+#wrapper {}
+#wrapper > header {
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+}
+
+#wrapper > header a {
+  text-decoration: none;
+  color: #fff;
+}
+#wrapper > header a:hover {
+  color: #df0901 !important;
+}
+#mainBanner {
+  background-color: #413F3F;
+  background-position: center left;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+main > .cover {
+  width: 100%;
+  height: 670px;
+  box-sizing: border-box;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+main > .cover > div {
+  position: relative;
+  width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+main > .cover > div > h1 {
+  position: absolute;
+  left: 0px;
+  top: 180px;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #fff;
+}
+main > .cover > div > p {
+  position: absolute;
+  left: 0px;
+  top: 330px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.9;
+
+}
+
+main > .content {
+  width: 1280px;
+  height: auto;
+  margin: 0 auto;
+  padding: 40px 0;
+  box-sizing: border-box;
+}
+
+main > .content > h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 16px;
+}
+
+main > .content > p {
+  font-size: 19px;
+  line-height: 28px;
+  margin-bottom: 80px;
+}
+
+
+#companyMain > .swiper > .swiper-wrapper {
+  background-image: url('../company/images/bg_main.jpg');
+  background-repeat: no-repeat;
+}
+#companyMain > .swiper .slide1 > section {
+  position: relative;
+  width: 100%;
+}
+#companyMain > .swiper .slide1  p {
+  position: absolute;
+  animation-duration: 3s;
+  animation-name: slidein;
+  left: 40px;
+  bottom: 380px;
+  color: #FFFDFD;
+  font-size: 40px;
+  font-weight: 700;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+#introduce > .cover {
+  background-image: url('../company/images/bg_company_introduce.jpg');
+}
+#media .cover > div > h1 {
+  position: absolute;
+  left: 10px;
+  top: 280px;
+  font-size: 52px;
+  font-weight: bold;
+  color: #ef2a23;
+}
+#media > div > div > p {
+  animation-duration: 3s;
+  animation-name: slidein;
+  left: 10px;
+  top: 380px;
+  color: #FFFDFD;
+  font-size: 35px;
+  font-weight: 600;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* íšŒì‚¬ì†Œê°œ */
+#introduce > .cover {
+  background-image: url('../company/images/bg_company_introduce.jpg');
+}
+
+#introduce img {
+  display: block;
+  width: 80%;
+  margin: 28px auto;
+}
+
+/* 채용 */
+#recruit > .cover {
+  background-image: url('../company/images/bg_company_manage.jpg');
+}
+
+#recruit img {
+  display: block;
+  width: 80%;
+  margin: 28px auto;
+}
+
+/* 미디어 */
+#media {}
+#media > .cover {
+  background-image: url('../company/images/bg_company_promote_lotte.png');
+}
+#media > .content {}
+#media > .content > article {
+  position: relative;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  margin-bottom: 26px;
+}
+#media > .content > article > h3 {
+  position: absolute;
+  left: 740px;
+  top: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+#media > section > article:nth-child(1) > p{
+  position: absolute;
+  left: 740px;
+  top: 60px;
+  font-size: 18px;
+}
+#media > .content > article > p {
+  position: absolute;
+  left: 740px;
+  top: 60px;
+  font-size: 18px;
+}
+
+/* 기업문화 */
+#culture > .cover {
+  background-image: url('../company/images/lotte_tower.jpg');
+}
+#culture > .cover >div > p {
+  animation-duration: 3s;
+  animation-name: slidein;
+  top: 380px;
+  color: #FFFDFD;
+  font-size: 35px;
+  font-weight: 600;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+#culture .cultureSub {
+  margin-bottom: 70px;
+}
+#culture .cultureContentP {
+  margin-top: 0;
+  margin-bottom: .9rem;
+  color: #000000;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.6em;
+}
+#culture .cultureCard {
+  max-width: 80%;
+  display: flex;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 70px;
+  position: relative;
+  border-radius: 10px; /* 모서리를 둥글게 만듭니다 */
+  overflow: hidden; /* 내용이 모서리를 넘어갈 경우 잘립니다 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+#culture .cardContent {
+  width: 50%; /* 이미지와 텍스트를 동일한 너비로 만듭니다 */
+}
+
+#culture .contentImg {
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+}
+#culture .contentText1{
+  padding: 50px;
+  width: 100%;
+  text-align: left;
+  color: #090808;
+  font-size: 25px;
+  font-weight: 500;
+  margin-bottom: 20px; /* 텍스트 사이의 간격을 만듭니다 */
+}
+
+#culture .contentTextH {
+  margin-bottom: 10px;
+  color: #000000;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 23px;
+  font-weight: 400;
+}
+#culture .contentTextP {
+  margin: 0;
+  color: #535658;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+}
+/* 소식과 이야기 */
+#story > .cover {
+  height: 400px;
+  background-color: #242238;
+}
+#story > .cover >div > p {
+  animation-duration: 3s;
+  animation-name: slidein;
+  top: 250px;
+  color: #d3c7c7;
+  font-size: 35px;
+  font-weight: 400;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+#story > .cover > div > h1 {
+  position: absolute;
+  left: 0px;
+  top: 180px;
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #f3eaea;
+}
+#story > .content > .navbar-expand-lg {
+  background-color: transparent !important;
+}
+#story .navbar-nav > .nav-item {
+  padding-right: 10px;
+}
+#story .navbar-nav > .nav-item >.nav-link {
+  color: #7a7a7a;
+  font-weight: 600;
+  font-family: "Noto Sans KR", sans-serif;
+}
+#story .navbar-nav > .nav-item >.active {
+  color: #df2c2c;
+}
+#story .navbar-nav > .nav-item >.nav-link:hover {
+  color: #df2c2c;
+}
+.cards{
+  margin-top: 40px;
+  margin-left: 40px;
+  width: 1180px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#story > .content > .cards > .card  {
+  display: flex;
+  float: left;
+  margin-right: 5px;
+  height: 430px;
+  width: calc(30% - 1rem); /* 1rem 마진 제외한 1/3 폭으로 설정 */
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  transition: box-shadow 0.3s ease; /* 그림자 변경을 부드럽게 전환 */
+  border-radius: 10px;
+  overflow: hidden;
+}
+.cards .card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+}
+.card-img-top {
+  width: 100%;
+  height: 230px;
+}
+.card-body {
+  height: 150px;
+  padding: 1.25rem 35px;
+}
+.card-body > p {
+  margin: 10px;
+}
+.card-title {
+  color: #000000;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  word-spacing: 0px;
+}
+.card-sub {
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 20px;
+  color: #505153;
+}
+#buttonDiv {
+
+  text-align: center;
+  padding: 5px;
+}
+#story .btnMoreView {
+  position: relative;
+  padding: 12px 24px;
+  color: #F0F4F9;
+  font-weight: bold;
+  font-size: 17px;
+  background-color: #E30613;
+  border-radius: 50px 50px 50px 50px;
+}
+#story .btnMoreView > .spinner-border {
+  position: absolute;
+  left: 43%;
+  top: 30%;
+  margin: inherit;
+  --bs-spinner-width: 1.5rem;
+  --bs-spinner-height: 1.5rem;
+}
+#story .btnMoreView > .spanMoreView{
+  color: #F0F4F9;
+  font-weight: bold;
+  font-size: 17px;
+}
+#story .btnMoreView:hover {
+  cursor: pointer;
+}
+/* 텍스트 애니메이션 */
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 300%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+}
+#culture > .content > ul {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+#culture > .content > ul > li {
+  float: left;
+  width: 25%;
+  height: 300px;
+  text-align: center;
+}
+#culture > .content > ul > li > h4 {
+  margin: 12px 0;
+  font-size: 19px;
+  font-weight: bold;
+}
+#culture > .content > ul > li > p {
+  width: 200px;
+  margin: 0 auto;
+}
+/* 채용 정보 */
+.pageDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.recruitDetail{
+  color: #0b0a0a;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 16px;
+}
+.accordion-body .recruitSpan{
+  color: #333030;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+}
+/* 검색 searchForm */
+.navbar {
+  margin: 0;
+}
+#recruitSearchDiv select {
+  width: 180px;
+  margin-left: 3px;
+}
+#recruitSearchDiv option {
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+#searchForm {
+  margin-bottom: 3px;
+}
+#keywordInput {
+  width: 200px;
+  margin-left: 5px;
+  height: 33px;
+}
+.btnSearch{
+  margin-top: 3px;
+}
+
+.btnSearch:hover{
+  background-color: #242238;
+  color: #F0F4F9;
+}

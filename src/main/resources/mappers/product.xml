@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.lotteon.mapper.ProductMapper">
+
+    <update id="updateProductHit">
+        UPDATE product SET hit = hit+1 WHERE prodNo =#{value};
+    </update>
+    <update id="updateProductStock">
+    UPDATE product SET stock = stock-#{count} WHERE prodNo =#{prodNo};
+    </update>
+    <update id="updateStatusByProdNo">
+        UPDATE product SET status = #{status} WHERE prodNo =#{prodNo};
+    </update>
+    <update id="updateProductByProdNo" parameterType="map">
+        UPDATE product
+        SET cate1 = #{cate1},
+        cate2 = #{cate2},
+        cate3 = #{cate3},
+        delivery = #{delivery},
+        discount = #{discount},
+        point = #{point},
+        price = #{price},
+        stock = #{stock},
+        amount = #{amount},
+        bizType = #{bizType},
+        company = #{company},
+        deleteYn = #{deleteYn},
+        descript = #{descript},
+        detail = #{detail},
+        duty = #{duty},
+        origin = #{origin},
+        prodName = #{prodName},
+        status = #{status},
+        thumb1 = #{thumb1},
+        thumb2 = #{thumb2},
+        thumb3 = #{thumb3}
+        WHERE prodNo = #{prodNo}
+    </update>
+</mapper>

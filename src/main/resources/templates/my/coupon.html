@@ -1,0 +1,78 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/myLayout}">
+<main id="myLayout" layout:fragment="content">
+    <script th:src="@{/js/myInfo.js}"></script>
+        <div id="my">
+            <div class="coupon">
+                <ul>
+                    <span class="menu_else"></span>
+                    <li><a th:href="@{/my/order(uid=${#authentication.principal.member.uid})}">전체주문내역</a></li>
+                    <!--<li><a href="./favorite.html">관심상품</a></li>-->
+                    <li><a th:href="@{/my/point(uid=${#authentication.principal.member.uid})}">포인트내역</a></li>
+                    <li class="on"><a th:href="@{/my/coupon(uid=${#authentication.principal.member.uid})}">쿠폰</a></li>
+                    <li><a th:href="@{/my/review(uid=${#authentication.principal.member.uid})}">나의리뷰</a></li>
+                    <li><a th:href="@{/my/qna(uid=${#authentication.principal.member.uid})}">문의하기</a></li>
+                    <li><a th:href="@{/my/infoAccessCheck(uid=${#authentication.principal.member.uid})}">나의설정</a></li>
+                    <li><a th:href="@{/my/wish}">나의찜</a></li>
+                </ul>
+
+                <section>
+                    <article>
+                        <div id="bannerTop" class="on" th:style="${banners.size() > 0 ? 'background: ' + banners[0].backcolor + ';' : ''}">
+                            <!-- 배너 영역 -->
+                            <th:block th:each="banner : ${banners}">
+                                <a th:href="@{${banner.link}}">
+                                    <img th:src="@{'/prodImg/'+ ${banner.thumb}}" alt="t1" />
+                                </a>
+                            </th:block>
+                        </div>
+                        <h3>쿠폰</h3>
+
+                        <p>고객님께서 보유하고 있는 할인쿠폰을 확인하세요! 상품구매 시 더욱 저렴하게 구매할 수 있습니다.</p>
+                        
+                        <div class="bg">
+                            <dl>
+                                <dt>· 나의 보유쿠폰</dt>
+                                <dd>
+                                    <strong th:text="${count}"></strong>
+                                    <span>장</span>
+                                </dd>
+                            </dl>
+                        </div>
+
+                        <table border="0">
+                            <tr>
+                                <th>쿠폰명</th>
+                                <th>할인금액</th>
+                                <th>적용기준/제한조건</th>               
+                                <th>유효기간</th>
+                                <th>상태</th>
+                            </tr>
+                            <tr th:each="coupon : ${coupons}">
+                                <td class="tit">[[${coupon.couponName}]]</td>
+                                <td class="discount"><span>[[${coupon.discountMoney}]]</span>원</td>
+                                <td class="condition"><span>[[${coupon.discountType}]]</span>원 이상 구매시</td>
+                                <td class="expire">[[${#temporals.format(coupon.expireDate, 'yyyy-MM-dd')}]]</td>
+                                <td class="status" th:style="${coupon.useYnString == '사용가능'} ? 'font-weight: bold;' : ''">
+                                    [[${coupon.useYnString}]]
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <ul class="info">
+                            <li>순금/골드바/돌반지/상품권 등 환금성 카테고리 및 중고상품 및 일부 프로모션 상품에는 쿠폰사용이 제한됩니다.</li>
+                            <li>쿠폰 적용 가능한 금액기준은 판매자 상품별할인과 G마켓 추가할인이 모두 포함된 할인적용가입니다.</li>
+                            <li>중복쿠폰은 판매자 할인, G마켓 할인과 중복 적용 가능하며 하나의 상품당 한장의 중복쿠폰만 사용 가능합니다.</li>
+                            <li>항공 할인은 항공권 전용 할인으로 결제시점에 할인 혜택을 받을 수 있습니다.</li>
+                            <li>항공권 예약취소 또는 환불시 적용했던 항공할인은 id당 1회 한하여 다시 발급됩니다.</li>
+                        </ul>                        
+                    </article>                  
+
+                    
+
+                </section>
+
+            </div>
+        </div>        
+</main>

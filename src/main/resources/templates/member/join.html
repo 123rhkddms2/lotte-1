@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{/layout/memberLayout}">
+        <main id="member" layout:fragment="content">
+            <div class="join">
+                <h1 class="welcome"><strong>롯데ON</strong>에 오신것을 환영합니다.</h1>
+                <div class="type">
+                    <div class="normal">
+                        <img th:src="@{/member/images/member_join_tit_normal.gif}" alt="구매회원 가입">
+                        <div class="txt">
+                            <img th:src="@{/member/images/member_join_txt_normal.gif}" alt="개인 구매회원">
+                            <!-- 일반회원 약관 페이지로 이동 -->
+                            <a th:href="@{/member/signup(type=normal)}"><img th:src="@{/member/images/member_join_btn1.gif}" alt="회원가입"></a>
+                        </div>
+                    </div>
+                    <div class="seller">
+                        <img th:src="@{/member/images/member_join_tit_seller.gif}" alt="판매회원 가입">
+                        <div class="txt">
+                            <img th:src="@{/member/images/member_join_txt_seller.gif}" alt="개인 구매회원">
+                            <!-- 판매회원 약관 페이지로 이동 -->
+                            <a th:href="@{/member/signup(type=seller)}"><img th:src="@{/member/images/member_join_btn2.gif}" alt="회원가입"></a>
+                        </div>
+                    </div>
+                </div>
+                <img th:src="@{/member/images/member_join_banner1.jpg}" class="banner" alt="신규회원을 위한 기분 좋은 혜택">
+                <img th:src="@{/member/images/member_join_banner2.jpg}" class="banner" alt="사업자회원을 위한 기분 좋은 혜택">
+            </div>
+        </main>        

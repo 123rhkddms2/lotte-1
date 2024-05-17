@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.lotteon.mapper.MemberMapper">
+
+    <select id="selectCountMember" resultType="int">
+        select count(*) from member
+        <where>
+            <!-- 일반회원 관련 중복검사 -->
+            <if test="type=='uid'">uid=#{value}</if>
+            <if test="type == 'nick'">nick=#{value}</if>
+            <if test="type=='hp'">hp=#{value}</if>
+            <if test="type=='email'">email=#{value}</if>
+
+            <!-- 판매자회원 관련 중복검사-->
+            <if test="type=='company'">company=#{value}</if>
+            <if test="type=='bizRegNum'">bizRegNum=#{value}</if>
+            <if test="type=='comRegNum'">comRegNum=#{value}</if>
+            <if test="type=='tel'">tel=#{value}</if>
+            <if test="type=='fax'">fax=#{value}</if>
+
+        </where>
+    </select>
+
+
+    <select id="countByNameAndEmail" resultType="int">
+        select count(*) from member
+        <where>
+            <!-- 아이디 찾기 관련 중복검사 -->
+            <if test="type == 'findIdEmail'">name=#{value} and email=#{email}</if>
+            <!-- 비밀번호찾기 관련 중복검사 -->
+            <if test="type == 'findPassEmail'">uid=#{value} and email=#{email}</if>
+        </where>
+    </select>
+
+    <update id="updateMemberPoint">
+        UPDATE member SET point = point-#{usedPoint} WHERE uid =#{uid};
+    </update>
+</mapper>
