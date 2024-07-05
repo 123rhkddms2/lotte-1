@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="/그림01.png" alt="LotteON 프로젝트" width="400"/>
-![그림01](https://github.com/123rhkddms2/lotte-1/assets/154954000/2717cd49-a918-4ee8-9bca-ea3b61c0cd82)
-
+  <img src="https://github.com/123rhkddms2/lotte-1/assets/154954000/2717cd49-a918-4ee8-9bca-ea3b61c0cd82" alt="LotteON 프로젝트" width="400"/>
 </div>
 
 # lotteon
