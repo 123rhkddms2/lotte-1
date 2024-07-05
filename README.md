@@ -1,31 +1,37 @@
-LotteON 프로젝트
 <div align="center">
-  <img src="your_lotteon_image_link_here" alt="LotteON 프로젝트" width="400"/>
+  <img src="https://github.com/green-lotte2/community-site-back-team1/assets/154953972/801ce44e-8d14-4346-99d7-943c6e2ff55c" alt="zeroPie2" width="400"/>
 </div>
-🛒 프로젝트 소개
-롯데e-커머스 LOTTE ON 쇼핑몰 개발
 
-📅 프로젝트 기간 / 👥 인원
-2024.04.15. ~ 2024.05.16 (1개월) / 4명
+# lotteon
+롯데e-커머스 LOTTE ON 쇼핑몰
 
-💻 개발 환경
-OS: Windows 10
-Framework: Spring Boot 3.2.0
-Language: Java 17, HTML5, CSS3, Javascript, jQuery 3.1
-DBMS: MySQL 8.0
-🛠️ 기술 스택
-<div align="center">
-  <img src="your_tech_stack_image_link_here" alt="기술스택" width="400"/>
-</div>
-🗺️ ERD 설계
-<div align="center">
-  <img src="your_erd_image_link_here" alt="ERD 설계" width="400"/>
-</div>
-🗂️ 정보구조 (IA: Information Architecture)
-<div align="center">
-  <img src="your_ia_image_link_here" alt="정보구조" width="400"/>
-</div>
-📄 최종 PPT
+## 1. 프로젝트 주제
+- 내용 : 오픈 마켓 기반 커머스
+- 목표 : 쇼핑몰의 기본 기능 개발, 실제 업무와 유사한 환경에서 설계 및 구현
+
+## 2. 프로젝트 기간
+- 24.04.16 ~ 24.05.17
+
+## 3. 사용기술
+- 프로그래밍 언어: Java, JavaScript, css, html
+- 프레임워크: Spring Boot
+- ORM: Spring Data JPA
+- 보안: Spring Security
+- 데이터베이스: MySQL
+- 배포: AWS
+
+## 4. 주요기능
+- 관리자, 판매자, 구매자별 기능
+- 공통기능(게시판, 마이페이지, 검색, 상품주)
+
+## 5. 팀 구성(4인)
+- 김선광 (팀장) : 상품, 메인 페이지
+- 남가희 : 회원, 마이페이지, 약관
+- 김광은 : 고객센터, 상품검색, 포인트관리, 주문목록
+- 최이진 : 관리자, 회사소개
+
+## 6. 시연 영상
+[![시연 영상](http://img.youtube.com/vi/quT-7FsTj44/0.jpg)](https://www.youtube.com/watch?v=quT-7FsTj44)
 
 # LotteON team3 프로젝트 업데이트 내역
 
