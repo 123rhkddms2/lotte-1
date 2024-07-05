@@ -1,4 +1,7 @@
 LotteON 프로젝트
+<div align="center">
+  <img src="your_lotteon_image_link_here" alt="LotteON 프로젝트" width="400"/>
+</div>
 🛒 프로젝트 소개
 롯데e-커머스 LOTTE ON 쇼핑몰 개발
 
@@ -11,16 +14,18 @@ Framework: Spring Boot 3.2.0
 Language: Java 17, HTML5, CSS3, Javascript, jQuery 3.1
 DBMS: MySQL 8.0
 🛠️ 기술 스택
- <!-- 이미지 파일 ID를 사용하여 참조 -->
-
+<div align="center">
+  <img src="your_tech_stack_image_link_here" alt="기술스택" width="400"/>
+</div>
 🗺️ ERD 설계
- <!-- 이미지 파일 ID를 사용하여 참조 -->
-
+<div align="center">
+  <img src="your_erd_image_link_here" alt="ERD 설계" width="400"/>
+</div>
 🗂️ 정보구조 (IA: Information Architecture)
- <!-- 이미지 파일 ID를 사용하여 참조 -->
-
+<div align="center">
+  <img src="your_ia_image_link_here" alt="정보구조" width="400"/>
+</div>
 📄 최종 PPT
-최종 PPT 파일 <!-- 파일 링크를 사용하여 참조 -->
 
 # LotteON team3 프로젝트 업데이트 내역
 
