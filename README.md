@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/green-lotte2/community-site-back-team1/assets/154953972/801ce44e-8d14-4346-99d7-943c6e2ff55c" alt="zeroPie2" width="400"/>
+  <img src="./그림01.png" alt="LotteON 프로젝트" width="400"/>
 </div>
 
 # lotteon
