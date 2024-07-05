@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./그림01.png" alt="LotteON 프로젝트" width="400"/>
+  <img src="/그림01.png" alt="LotteON 프로젝트" width="400"/>
 </div>
 
 # lotteon
