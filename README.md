@@ -1,3 +1,27 @@
+LotteON 프로젝트
+🛒 프로젝트 소개
+롯데e-커머스 LOTTE ON 쇼핑몰 개발
+
+📅 프로젝트 기간 / 👥 인원
+2024.04.15. ~ 2024.05.16 (1개월) / 4명
+
+💻 개발 환경
+OS: Windows 10
+Framework: Spring Boot 3.2.0
+Language: Java 17, HTML5, CSS3, Javascript, jQuery 3.1
+DBMS: MySQL 8.0
+🛠️ 기술 스택
+ <!-- 이미지 파일 ID를 사용하여 참조 -->
+
+🗺️ ERD 설계
+ <!-- 이미지 파일 ID를 사용하여 참조 -->
+
+🗂️ 정보구조 (IA: Information Architecture)
+ <!-- 이미지 파일 ID를 사용하여 참조 -->
+
+📄 최종 PPT
+최종 PPT 파일 <!-- 파일 링크를 사용하여 참조 -->
+
 # LotteON team3 프로젝트 업데이트 내역
 
 0.0.1-SNAPSHOT
